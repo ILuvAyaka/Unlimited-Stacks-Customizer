@@ -17,19 +17,23 @@
 ---
 
 <a name="简体中文说明"></a>
+
 ## 📖 简介
 
-在原版 Minecraft（包括 ~26.2 及更新版本）中，物品组件系统的默认堆叠上限最大被限制在 **99**。虽然优秀的开源模组 **[Unlimited Stacks](https://modrinth.com/mod/unlimited-stacks)**（由 HarryTheeWizard 开发）将堆叠上限提升到了 21 亿（`Integer.MAX_VALUE`），但由于其数值直接**硬编码在类字节码中**且未提供配置文件，玩家和整合包作者无法自由设定想要的堆叠上限（例如设定为常见的 999、1000、65535 或 1,000,000）。
+在原版 Minecraft（包括 ~26.2 及更新版本）中，物品组件系统的默认堆叠上限最大被限制在 **99**。虽然优秀的社区模组 **[Unlimited Stacks Mod](https://modrinth.com/mod/unlimited-stacks-mod)**（由 HarryTheeWizard 开发）将堆叠上限提升到了 21 亿（`Integer.MAX_VALUE`），但由于其数值直接**硬编码在类字节码中**且未提供配置文件，玩家和整合包作者无法自由设定想要的堆叠上限（例如设定为常见的 999、1000、65535 或 1,000,000）。
 
 **Unlimited Stacks Customizer** 是一个专为该模组打造的轻量级自动化修补工具。它直接在二进制级别解析 Jar 包中的常量池（Constant Pool），安全无损地将堆叠上限替换为您所指定的任何正整数，并自动完成文件备份与版本重命名。
 
 ---
 
 > [!WARNING]
+>
 > ### ⚠️ 重要安全警告：调低堆叠上限会导致超出部分的物品消失！
+>
 > **实测证实**：若现有存档中已存在超过新上限的大堆叠物品（例如箱子里堆叠了 3000 个物品），**直接调低模组上限（例如降为 1000）并进入游戏，超出新上限的物品将会直接被系统截断丢弃并永久消失！**
 >
 > **安全降级操作流程：**
+>
 > 1. **第一步（必须）**：在修改模组前，完整备份你的世界存档（`saves/你的存档`）。
 > 2. **第二步**：进入游戏，将所有超过目标新上限的大堆叠物品**提前手动分摊到多个空箱子/背包格子中**，确保没有单格数量超过新上限。
 > 3. **第三步**：保存并完全退出游戏后，再运行本脚本降低模组上限。
@@ -43,8 +47,9 @@
 > 出于对原作者版权、劳动成果与下载量统计的尊重，**本仓库仅提供补丁与定制工具，不直接附带或分发原模组的二进制 Jar 文件**。
 
 在运行本修补工具前，请先前往官方渠道下载原版模组：
+
 1. **前往 Modrinth 官方页面下载原版 Mod**：  
-   👉 **[Unlimited Stacks Mod on Modrinth (by HarryTheeWizard)](https://modrinth.com/mod/unlimited-stacks)**
+   👉 **[Unlimited Stacks Mod on Modrinth (by HarryTheeWizard)](https://modrinth.com/mod/unlimited-stacks-mod)**
 2. 将下载到的模组文件（如 `unlimited-stacks-mod-1.0.3.jar`）直接放置在**本工具同级目录**下（脚本运行时会自动检测该文件）。
 3. 如需指定其他目录下的模组，也可在执行命令时使用 `-JarPath` 参数。
 
@@ -66,11 +71,15 @@
 ## 🚀 快速上手
 
 ### 1. 查看当前模组的堆叠上限
+
 确保原版模组 Jar 已放在当前目录下，运行：
+
 ```powershell
 .\Modify-StackLimit.ps1
 ```
+
 *输出示例：*
+
 ```text
 === Unlimited Stacks Mod: 读取当前设置 ===
 模组文件: unlimited-stacks-mod-1.0.3.jar
@@ -81,10 +90,13 @@
 ```
 
 ### 2. 修改上限为目标数值（例如 1000）
+
 ```powershell
 .\Modify-StackLimit.ps1 1000
 ```
+
 *输出示例：*
+
 ```text
 === Unlimited Stacks Mod: 开始修改堆叠上限 ===
 当前文件: unlimited-stacks-mod-1.0.3.jar
@@ -103,11 +115,14 @@
 ```
 
 ### 3. 高级用法
+
 - **指定外部 Jar 路径修改**：
+
   ```powershell
   .\Modify-StackLimit.ps1 -NewLimit 999 -JarPath "C:\mc\mods\unlimited-stacks-mod-1.0.3.jar"
   ```
 - **不生成备份文件**：
+
   ```powershell
   .\Modify-StackLimit.ps1 999 -NoBackup
   ```
@@ -134,21 +149,25 @@
 ## ❓ 常见问题 (FAQ)
 
 #### Q1: 如果游戏里已经有堆叠了 3000 个的物品，此时将上限降低为 1000，多出的物品会消失吗？
+
 **是的，多出的物品会被直接截断丢失！**  
 实测证明：在 Minecraft 26.2 中，当背包或箱子等容器加载与客户端同步时，若检测到格内物品数量超过了当前模组允许的最大堆叠上限，超出部分将会被系统**直接截断丢弃**（即 3000 个会变成 1000 个，多出的 2000 个无法找回）。  
 ⚠️ **请务必注意**：切勿在有大堆叠存档的情况下直接调低上限！请务必先备份存档，在游戏内将大堆叠分摊到多个格子中（确保每格不超过新上限），然后再退出游戏调低模组上限。
 
 #### Q2: 上限数值建议设置多少？
+
 * **上限理论极值**：Java 有符号 32 位整型上限为 `2,147,483,647`。为了防止两个大堆叠相加时发生整数溢出，建议的理论安全极值为 **`1,073,741,823`**（即 `Integer.MAX_VALUE / 2`）。
 * **常规推荐数值**：`999`、`1000`、`9999`、`65535`、`1,000,000` 均为日常生存与服务器使用中最推荐的稳定数值。
 
 ---
 
 <a name="english-documentation"></a>
+
 ## 🌐 English Documentation
 
 ### Overview
-Minecraft ~26.2 (Fabric) natively caps item stack sizes at 99 in its data component codecs. While **[Unlimited Stacks Mod](https://modrinth.com/mod/unlimited-stacks)** (by HarryTheeWizard) lifts this ceiling up to 2.14 billion (`Integer.MAX_VALUE`), it hardcodes the limit in bytecode without providing a config file.
+
+Minecraft ~26.2 (Fabric) natively caps item stack sizes at 99 in its data component codecs. While **[Unlimited Stacks Mod](https://modrinth.com/mod/unlimited-stacks-mod)** (by HarryTheeWizard) lifts this ceiling up to 2.14 billion (`Integer.MAX_VALUE`), it hardcodes the limit in bytecode without providing a config file.
 
 **Unlimited Stacks Customizer** is a zero-dependency PowerShell patcher that inspects and modifies the Constant Pool integers directly inside the compiled `.jar`, giving you full control over the exact stack size cap.
 
@@ -158,16 +177,18 @@ Minecraft ~26.2 (Fabric) natively caps item stack sizes at 99 in its data compon
 > **Always backup your world save** and manually split your large stacks across multiple slots before decreasing the stack limit.
 
 ### 📥 Prerequisites: Download the Original Mod
+
 > [!NOTE]
 > **Distribution Notice**:  
 > To respect the original author's copyright, labor, and download metrics, **this repository provides the patcher tool only and does NOT distribute the original mod binary `.jar` file**.
 
 1. Download the original mod from the official Modrinth page:  
-   👉 **[Unlimited Stacks Mod on Modrinth (by HarryTheeWizard)](https://modrinth.com/mod/unlimited-stacks)**
+   👉 **[Unlimited Stacks Mod on Modrinth (by HarryTheeWizard)](https://modrinth.com/mod/unlimited-stacks-mod)**
 2. Place the downloaded `.jar` file (e.g., `unlimited-stacks-mod-1.0.3.jar`) into the same directory as this script.
 3. You can also specify an external file path using the `-JarPath` parameter.
 
 ### Quick Commands
+
 ```powershell
 # View current stack size cap
 .\Modify-StackLimit.ps1
@@ -183,5 +204,5 @@ Minecraft ~26.2 (Fabric) natively caps item stack sizes at 99 in its data compon
 
 ## 🤝 致谢与开源协议 (Credits & License)
 
-- **原模组开发 (Original Mod)**：[HarryTheeWizard](https://modrinth.com/user/HarryTheeWizard) - [Unlimited Stacks on Modrinth](https://modrinth.com/mod/unlimited-stacks)
+- **原模组开发 (Original Mod)**：[HarryTheeWizard](https://modrinth.com/user/HarryTheeWizard) - [Unlimited Stacks Mod on Modrinth](https://modrinth.com/mod/unlimited-stacks-mod)
 - **开源协议 (License)**：本项目根据 [MIT License](LICENSE) 开源发布。
