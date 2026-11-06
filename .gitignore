@@ -1,0 +1,26 @@
+﻿# Mod jar binaries (not distributed in this repository)
+*.jar
+
+# Backup and patcher artifacts
+*.bak
+*.jar.bak
+
+# Temporary and test files
+test*
+extracted/
+tmp/
+*.tmp
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log files
+*.log
